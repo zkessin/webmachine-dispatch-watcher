@@ -1,0 +1,8 @@
+%-*-mode: Erlang -*-
+{application, dispatch_watcher,
+ [{description, "Dispatch Watcher"},
+  {vsn, "0.1"},
+  {modules, [
+  dispatch_watcher,
+  dispatch_watcher_sup,
+  dispatch_watcher_app]}]}.
