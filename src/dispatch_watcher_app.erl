@@ -8,53 +8,18 @@
 %%%-------------------------------------------------------------------
 -module(dispatch_watcher_app).
 
--behaviour(application).
 
-%% Application callbacks
--export([start/2, stop/1]).
+-behavior(e2_application).
 
-%%%===================================================================
-%%% Application callbacks
-%%%===================================================================
+-export([init/1, init/0, start/0]).
 
-%%--------------------------------------------------------------------
-%% @private
-%% @doc
-%% This function is called whenever an application is started using
-%% application:start/[1,2], and should start the processes of the
-%% application. If the application is structured according to the OTP
-%% design principles as a supervision tree, this means starting the
-%% top supervisor of the tree.
-%%
-%% @spec start(StartType, StartArgs) -> {ok, Pid} |
-%%                                      {ok, Pid, State} |
-%%                                      {error, Reason}
-%%      StartType = normal | {takeover, Node} | {failover, Node}
-%%      StartArgs = term()
-%% @end
-%%--------------------------------------------------------------------
-start(_StartType, _StartArgs) ->
-    io:format("~p:~p (~p) start/2 ~n", [?FILE,?LINE, self()]),
-    case dispatch_watcher_sup:start_link() of
-	{ok, Pid} ->
-	    {ok, Pid};
-	Error ->
-	    Error
-    end.
+start() ->
+    e2_application:start_with_dependencies(dispatch_watcher_app).
 
-%%--------------------------------------------------------------------
-%% @private
-%% @doc
-%% This function is called whenever an application has stopped. It
-%% is intended to be the opposite of Module:start/2 and should do
-%% any necessary cleaning up. The return value is ignored.
-%%
-%% @spec stop(State) -> void()
-%% @end
-%%--------------------------------------------------------------------
-stop(_State) ->
-    ok.
+init([]) ->
+    io:format("~p:~p (~p) init([]) ~n", [?MODULE, ?LINE, self()]),
+    {ok, [dispatch_watcher, {dispatch_watcher}]}.
 
-%%%===================================================================
-%%% Internal functions
-%%%===================================================================
+init() ->
+    io:format("~p:~p (~p) init() ~n", [?MODULE, ?LINE, self()]),
+    {ok, [dispatch_watcher]}.

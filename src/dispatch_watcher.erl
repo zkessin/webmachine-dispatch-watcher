@@ -8,7 +8,7 @@
 -include_lib("kernel/include/file.hrl").
 -behavior(e2_task).
 
--export([start_link/1, handle_task/1]).
+-export([start_link/0, handle_task/1]).
 
 
 -record(state, {last, dispatch, interval}).
@@ -23,8 +23,7 @@
 %%      and monitor interval.
 %% gen_server callbacks
 
-start_link([]) ->
-
+start_link() ->
     Dispatch = filename:join(["priv", "dispatch.conf"]),
     io:format("~p:~p (~p) Dispatch File ~p ~n",
 					    [?FILE, ?LINE, self(), Dispatch]),

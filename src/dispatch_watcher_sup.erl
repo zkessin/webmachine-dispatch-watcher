@@ -8,65 +8,12 @@
 %%%-------------------------------------------------------------------
 -module(dispatch_watcher_sup).
 
--behaviour(supervisor).
+-behavior(e2_task_supervisor).
 
-%% API
--export([start_link/0]).
+-export([start_link/0, start_reader/1]).
 
-%% Supervisor callbacks
--export([init/1]).
-
--define(SERVER, ?MODULE).
-
-%%%===================================================================
-%%% API functions
-%%%===================================================================
-
-%%--------------------------------------------------------------------
-%% @doc
-%% Starts the supervisor
-%%
-%% @spec start_link() -> {ok, Pid} | ignore | {error, Error}
-%% @end
-%%--------------------------------------------------------------------
 start_link() ->
-    supervisor:start_link({local, ?SERVER}, ?MODULE, []).
+    e2_task_supervisor:start_link(?MODULE, dispatch_watcher, [registered]).
 
-%%%===================================================================
-%%% Supervisor callbacks
-%%%===================================================================
-
-%%--------------------------------------------------------------------
-%% @private
-%% @doc
-%% Whenever a supervisor is started using supervisor:start_link/[2,3],
-%% this function is called by the new process to find out about
-%% restart strategy, maximum restart frequency and child
-%% specifications.
-%%
-%% @spec init(Args) -> {ok, {SupFlags, [ChildSpec]}} |
-%%                     ignore |
-%%                     {error, Reason}
-%% @end
-%%--------------------------------------------------------------------
-init([]) ->
-    io:format("~p:~p (~p) init/2~n", [?FILE,?LINE, self()]),
-    RestartStrategy		= one_for_one,
-    MaxRestarts			= 1000,
-    MaxSecondsBetweenRestarts	= 3600,
-
-    SupFlags			= {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
-
-    Restart			= permanent,
-    Shutdown			= 2000,
-    Type			= worker,
-
-    AChild			= {'dispatch_watcher', 
-				   {'dispatch_watcher', start_link, []},
-				   Restart, Shutdown, Type, ['dispatch_watcher']},
-
-    {ok, {SupFlags, [AChild]}}.
-
-%%%===================================================================
-%%% Internal functions
-%%%===================================================================
+start_reader(_) ->
+    e2_task_supervisor:start_task(?MODULE, []).
