@@ -34,6 +34,7 @@
 %% @end
 %%--------------------------------------------------------------------
 start(_StartType, _StartArgs) ->
+    io:format("~p:~p (~p) start/2 ~n", [?FILE,?LINE, self()]),
     case dispatch_watcher_sup:start_link() of
 	{ok, Pid} ->
 	    {ok, Pid};

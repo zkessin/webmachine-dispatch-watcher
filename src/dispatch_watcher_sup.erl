@@ -50,18 +50,20 @@ start_link() ->
 %% @end
 %%--------------------------------------------------------------------
 init([]) ->
-    RestartStrategy = one_for_one,
-    MaxRestarts = 1000,
-    MaxSecondsBetweenRestarts = 3600,
+    io:format("~p:~p (~p) init/2~n", [?FILE,?LINE, self()]),
+    RestartStrategy		= one_for_one,
+    MaxRestarts			= 1000,
+    MaxSecondsBetweenRestarts	= 3600,
 
-    SupFlags = {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
+    SupFlags			= {RestartStrategy, MaxRestarts, MaxSecondsBetweenRestarts},
 
-    Restart = permanent,
-    Shutdown = 2000,
-    Type = worker,
+    Restart			= permanent,
+    Shutdown			= 2000,
+    Type			= worker,
 
-    AChild = {'dispatch_watcher', {'dispatch_watcher', start_link, []},
-	      Restart, Shutdown, Type, ['dispatch_watcher']},
+    AChild			= {'dispatch_watcher', 
+				   {'dispatch_watcher', start_link, []},
+				   Restart, Shutdown, Type, ['dispatch_watcher']},
 
     {ok, {SupFlags, [AChild]}}.
 
